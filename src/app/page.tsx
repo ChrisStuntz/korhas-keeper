@@ -1,15 +1,17 @@
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import { db } from "~/server/db";
+import { UploadButton } from "~/utils/uploadthing";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+async function Images() {
   const images = await db.query.images.findMany({
     orderBy: (model, { asc }) => asc(model.id),
   });
+
   return (
-    <main className="">
-      <div className="flex flex-wrap gap-4">
+    <div className="flex flex-wrap gap-4">
         {
           images.map((image) => (
             <div key={image.id} className="flex w-48 flex-col">
@@ -19,7 +21,27 @@ export default async function HomePage() {
           ))
         }
       </div>
-      Meowdy, Parner
+  );
+  
+}
+
+export default async function HomePage() {
+  
+  return (
+    <main className="">
+      <SignedOut>
+        <div className="h-full w-full text-2xl">Please sign in!</div>
+      </SignedOut>
+
+      <SignedIn>
+      <Images />
+        <div>
+          <UploadButton 
+            endpoint="imageUploader" 
+          />
+        </div>
+      </SignedIn>
+      <div>Meowdy, Partner</div>
     </main>
   )
 }
