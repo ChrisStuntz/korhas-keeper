@@ -3,6 +3,15 @@
 import { UploadButton } from "~/utils/uploadthing";
 import { useRouter } from "next/navigation";
 
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs'
+
+
 export function TopNav() {
     const router = useRouter();
   
@@ -22,7 +31,12 @@ export function TopNav() {
         </div>
   
         <div>
-          Sign In
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
       </nav>
     );
