@@ -4,6 +4,7 @@
 import { sql } from "drizzle-orm";
 import {
   index,
+  integer,
   pgTableCreator,
   serial,
   timestamp,
@@ -24,6 +25,7 @@ export const images = createTable(
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     url: varchar("url", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -36,4 +38,38 @@ export const images = createTable(
   })
 );
 
+export const players = createTable(
+  "player",
+  {
+    playerId: serial("id").primaryKey(),
+    name: varchar("name", {length: 128 }).notNull(),
+  },
+  (example) => ({
+    playerIndex: index("player_idx").on(example.name),
+  })
+);
 
+export const characters = createTable(
+  "character",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }).notNull(),
+    player: varchar("player", { length: 128 }).notNull(),
+
+  },
+  (example) => ({
+    characterIndex: index("char_idx").on(example.name),
+  })
+);
+
+export const downtime = createTable(
+  "downtime",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 128 }),
+    total_points: integer("total_points"),
+  },
+  (example) => ({
+    dtIndex: index("dt_idx").on(example.name),
+  })
+)
